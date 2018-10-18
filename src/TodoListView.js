@@ -7,57 +7,23 @@ const ListViewStyle = {
     borderRadius: '8px'
 };
 
-const all = [
-    {
-        text : 'All tasks are shown',
-        completed: false,
-        id: '4554'
-
-    },
-    {
-        text : 'fdljlsfdsfd lfdisj lfdsoj jdfsoj',
-        completed: false,
-        id: '844478'
-
-    },
-    {
-        text : 'weo df, ld',
-        completed: false,
-        id: '87787'
-
-    }
-];
 
 
-const TodoListView  = () => {
+const TodoListView  = ({ tasks, handleCheckedState }) => {
 
-    
-
-    function handleCheckedState (e) {
-        console.log(e);
-        console.log(e.target.name);
-        this.setState((prevState) => ({
-            checked: !prevState.checked
-        }))
-    }
-
-    function renderTaskRow()  {
-    //   return _.each(all, (object) => {
-    //         return <TaskRow key={object.id} data={object} />
-    //     });
-        return all.forEach(element => {
-            return <TaskRow key={element.id} data={element} />
+    function renderTaskRow(all)  {
+      return _.map(all, (object) => {
+            return <TaskRow key={object.id} data={object} handleCheckedState={handleCheckedState}/>
         });
-    // return <TaskRow> </TaskRow>
     }
 
         return ( 
             <div className="mt-4 row" style={ListViewStyle} onMouseEnter={renderTaskRow}>
                 <div className="col-12">
-                    {renderTaskRow}
+                    {renderTaskRow(tasks)}
                 </div>
             </div>
          );
     }
- 
+
 export default TodoListView;
