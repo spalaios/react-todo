@@ -8,32 +8,7 @@ class Todo extends Component {
         this.state = { 
             showListType: 0,
             store: [],
-            all: [
-                {
-                    text : 'All tasks are shown',
-                    completed: true,
-                    id: '01'
-            
-                },
-                {
-                    text : 'wallah habibi..',
-                    completed: true,
-                    id: '02'
-            
-                },
-                {
-                    text : 'code is life',
-                    completed: false,
-                    id: '03'
-            
-                },
-                {
-                    text : 'make your life',
-                    completed: true,
-                    id: '04'
-            
-                }
-            ],
+            all: [],
             completed: [],
             notCompleted: [],
             taskValue: "",
@@ -41,33 +16,52 @@ class Todo extends Component {
          }
     }
 
-    componentDidMount() {
-        console.log(this.state.all);
-        this.setState({
-            ...this.state,
-            store: this.state.all
-        });
+    componentDidUpdate(prevProps, prevState) {
+        if(prevState.all !== this.state.all) {
+            console.log('updating state all array');
+            this.setState(prevState => ({
+                ...prevState,
+              store: [...prevState.all ]
+            }));
+        }
     }
 
     handleOnChange = (e) => {
         const value = e.target.value;
-        console.log(value);
         this.setState({
             taskValue: value
         });
     }
 
+    generateRandomNumber = () => {
+        const num = Math.random()*100;
+        return num;
+    }
+
     handleFormSubmit = (e) => {
+        const value = this.state.taskValue;
+        console.log(value);
         e.preventDefault();
+        const temp = {
+            text : (value) ? value.trim() : '',
+            completed: false,
+            id: Math.round(this.generateRandomNumber())
+        }
+        console.log(temp);
+          this.setState(prevState => ({
+              ...prevState,
+            all: [...prevState.all, temp ],
+            taskValue: ""
+          }));
     }
 
     setUnsetCheckedState = (e) => {
         const newArray = [];
         const currentAll = this.state.all;
         currentAll.forEach(element => {
-            if(element.id === e.target.value){
+            if(element.id === parseInt(e.target.value)){
                 const currentCompletedState = element.completed;
-                element['completed'] = !currentCompletedState;
+                element.completed = !currentCompletedState;
             }
             newArray.push(element);
         });
@@ -81,10 +75,12 @@ class Todo extends Component {
             // remove the clicked one 
             const currentStore  = array;
             _.remove(currentStore, function(value) {
-                return value.id === event.target.value;
+                return value.id === parseInt(event.target.value);
             });
-
-            console.log(currentStore);
+            this.setState({ 
+                ...this.state,
+                store: currentStore  
+            });
         }
     }
 
